@@ -10,7 +10,7 @@ param cosmosAccountName string = 'cosmosacc-eccomerce-${env}-v3'
 param redisName string = 'redisEccomerce${env}v3'
 param sbName string = 'sb-Eccomerce-${env}-v3'
 param eventHubName string = 'eventHub-Eccommerce-${env}-v3'
-param keyVaultName string = 'keyVault-Eccomerce-${env}v33'
+param keyVaultName string = 'keyvaulteccomerce${env}v33'
 param apimName string = 'apim-Eccomerce-${env}v3'
 param acrName string // injected from the pipeline
 
