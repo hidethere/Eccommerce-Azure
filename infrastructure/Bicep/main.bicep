@@ -5,13 +5,13 @@ param vmSubnetName string = 'vmSubnet-${env}'
 param vnetName string = 'vnet-Eccomerce-${env}'
 param location string = resourceGroup().location
 
-param sqlServerName string = 'sqlServer-Eccomerce-${env}-v2'
-param cosmosAccountName string = 'cosmosacc-eccomerce-${env}-v2'
-param redisName string = 'redisEccomerce${env}v2'
-param sbName string = 'sb-Eccomerce-${env}-v2'
-param eventHubName string = 'eventHub-Eccommerce-${env}-v2'
-param keyVaultName string = 'keyVault-Eccomerce-${env}v3'
-param apimName string = 'apim-Eccomerce-${env}v2'
+param sqlServerName string = 'sqlServer-Eccomerce-${env}-v3'
+param cosmosAccountName string = 'cosmosacc-eccomerce-${env}-v3'
+param redisName string = 'redisEccomerce${env}v3'
+param sbName string = 'sb-Eccomerce-${env}-v3'
+param eventHubName string = 'eventHub-Eccommerce-${env}-v3'
+param keyVaultName string = 'keyVault-Eccomerce-${env}v33'
+param apimName string = 'apim-Eccomerce-${env}v3'
 param acrName string // injected from the pipeline
 
 
@@ -98,7 +98,7 @@ module serviceBus 'modules/serviceBus.bicep' = {
 
 // Event Hub
 module eventHub 'modules/eventhub.bicep' = {
-  name: 'eventHubDeploy-${env}1'
+  name: 'eventHubDeploy-${env}3'
   params: {
     eventHubNameSpace: eventHubName
     //schemaRegistryName: 'schemaRegistry-Eccommerce-${env}'
@@ -108,7 +108,7 @@ module eventHub 'modules/eventhub.bicep' = {
 
 // Key Vault
 module keyVault 'modules/keyVault.bicep' = {
-  name: 'keyVaultDeploy-${env}02'
+  name: 'keyVaultDeploy-${env}03'
   params: {
     keyVaultName: keyVaultName
     location: location
@@ -118,7 +118,7 @@ module keyVault 'modules/keyVault.bicep' = {
 
 // Container Apps Env
 module containerAppsEnv 'modules/acaenv.bicep' = {
-  name: 'containerAppsEnvDeploy-${env}-1'
+  name: 'containerAppsEnvDeploy-${env}-2'
   params: {
     vnetId: vnet.outputs.vnetId
     containerAppsEnvName: containerAppsEnvName
