@@ -72,5 +72,4 @@ stages:
                       containerAppsName="${{ svc.containerAppsName }}" `
                       image=$(acrLoginServer)/${{ svc.name }}:$(imageTag) `
                       revisionSuffix="rev-$(Build.BuildId)-$(Date -Format 'yyyyMMddHHmmss')" `
-                      keyvaultUri=$(KEYVAULT_URI)
 
