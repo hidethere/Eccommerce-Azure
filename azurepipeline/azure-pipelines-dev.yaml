@@ -71,5 +71,5 @@ stages:
                       env=$(env) `
                       containerAppsName="${{ svc.containerAppsName }}" `
                       image=$(acrLoginServer)/${{ svc.name }}:$(imageTag) `
-                      revisionSuffix="rev-$(Build.BuildId)-$(Date -Format 'yyyyMMddHHmmss')" `
+                      revisionSuffix="rev-$(Build.BuildId)-$(Date -Format 'yyyyMMddHHmmss')"
 
