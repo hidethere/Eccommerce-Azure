@@ -1,0 +1,86 @@
+trigger:
+  branches:
+    include:
+      - dev
+
+variables:
+- group: MyDevInfraVars
+- name: imageTag
+  value: '$(Build.BuildId)'
+
+pool:
+  name: MySelfHostedPool
+
+parameters:
+  - name: services
+    type: object
+    default:
+      - name: inventoryservice
+        containerAppsName: inventoryservice-apps
+        dockerfilePath: src/InventoryService/src/InventoryService.API/Dockerfile
+        buildContext: src/InventoryService/src
+        projectPath: InventoryService.API/InventoryService.API.csproj
+
+      - name: productservice
+        containerAppsName: productservice-apps
+        dockerfilePath: src/Product-service/src/Dockerfile
+        buildContext: src/Product-service/src
+        projectPath:  src/Product-service/src/Product-service.API.csproj
+      # Add more services here...
+
+stages:
+- stage: BuildAndPush
+  displayName: Build and Push All Microservices
+  jobs:
+    - ${{ each svc in parameters.services }}:
+      - job: BuildPush_${{ svc.name }}
+        displayName: Build and Push ${{ svc.name }}
+        steps:
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'MyACRServiceConnection'
+              repository: ${{ svc.name }}
+              command: 'buildAndPush'
+              Dockerfile: '$(Build.SourcesDirectory)/${{ svc.dockerfilePath }}'
+              buildContext: '$(Build.SourcesDirectory)/${{ svc.buildContext }}'
+              tags: |
+                $(imageTag)
+
+- stage: Deploy
+  dependsOn: BuildAndPush
+  displayName: Deploy All Services to ACA
+  jobs:
+    - ${{ each svc in parameters.services }}:
+      - job: Deploy_${{ svc.name }}
+        displayName: Deploy ${{ svc.name }}
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'MyAzureServiceConnection'
+              scriptType: 'ps'  # PowerShell
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                  Write-Host "Deploying ${{ svc.name }}..."
+
+                  $templatePath = "$(Build.SourcesDirectory)\infrastructure\Bicep\main.bicep"
+
+                  if (-Not (Test-Path $templatePath)) {
+                    Write-Host "Bicep file NOT FOUND at: $templatePath"
+                    Get-ChildItem -Path "$(Build.SourcesDirectory)\infrastructure\Bicep\" | Format-List
+                    throw "Missing template file"
+                  }
+
+                  Write-Host "Using Windows path for deployment: $templatePath"
+
+                  az deployment group create `
+                    --resource-group $(resourceGroup) `
+                    --template-file "$templatePath" `
+                    --parameters `
+                      BuildId=$(Build.BuildId) `
+                      acrName=$(acrName) `
+                      env=$(env) `
+                      containerAppsName="${{ svc.containerAppsName }}" `
+                      image=$(acrLoginServer)/${{ svc.name }}:$(imageTag) `
+                      revisionSuffix="rev-$(Build.BuildId)-$(Date -Format 'yyyyMMddHHmmss')" `
+                      keyvaultUri=$(KEYVAULT_URI)
+
