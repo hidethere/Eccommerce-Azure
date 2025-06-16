@@ -26,7 +26,6 @@ parameters:
         dockerfilePath: src/Product-service/src/Dockerfile
         buildContext: src/Product-service/src
         projectPath:  src/Product-service/src/Product-service.API.csproj
-      # Add more services here...
 
 stages:
 - stage: BuildAndPush
@@ -61,16 +60,6 @@ stages:
               scriptLocation: 'inlineScript'
               inlineScript: |
                   Write-Host "Deploying ${{ svc.name }}..."
-
-                  $templatePath = "$(Build.SourcesDirectory)\infrastructure\Bicep\main.bicep"
-
-                  if (-Not (Test-Path $templatePath)) {
-                    Write-Host "Bicep file NOT FOUND at: $templatePath"
-                    Get-ChildItem -Path "$(Build.SourcesDirectory)\infrastructure\Bicep\" | Format-List
-                    throw "Missing template file"
-                  }
-
-                  Write-Host "Using Windows path for deployment: $templatePath"
 
                   az deployment group create `
                     --resource-group $(resourceGroup) `
