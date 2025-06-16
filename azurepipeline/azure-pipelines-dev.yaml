@@ -61,6 +61,15 @@ stages:
               inlineScript: |
                   Write-Host "Deploying ${{ svc.name }}..."
 
+                  $templatePath = "$(Build.SourcesDirectory)\infrastructure\Bicep\main.bicep"
+
+                  if (-Not (Test-Path $templatePath)) {
+                    Write-Host "Bicep file NOT FOUND at: $templatePath"
+                    Get-ChildItem -Path "$(Build.SourcesDirectory)\infrastructure\Bicep\" | Format-List
+                    throw "Missing template file"
+                  }
+
+                  Write-Host "Using Windows path for deployment: $templatePath"
 
                   az deployment group create `
                     --resource-group $(resourceGroup) `
@@ -71,5 +80,5 @@ stages:
                       env=$(env) `
                       containerAppsName="${{ svc.containerAppsName }}" `
                       image=$(acrLoginServer)/${{ svc.name }}:$(imageTag) `
-                      revisionSuffix="rev-$(Build.BuildId)-$(Date -Format 'yyyyMMddHHmmss')"
+                      revisionSuffix="rev-$(Build.BuildId)-$(Date -Format 'yyyyMMddHHmmss')" 
 
