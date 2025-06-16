@@ -61,6 +61,7 @@ stages:
               inlineScript: |
                   Write-Host "Deploying ${{ svc.name }}..."
 
+
                   az deployment group create `
                     --resource-group $(resourceGroup) `
                     --template-file "$templatePath" `
