@@ -53,6 +53,7 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
         appPort: 8080
         appId: containerAppName
         appProtocol: 'http'
+ 
         
       }
       registries: [
