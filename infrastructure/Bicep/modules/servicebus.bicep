@@ -14,22 +14,13 @@ resource serviceBusNamespace 'Microsoft.ServiceBus/namespaces@2024-01-01' = {
   }
 }
 
-resource sbNamespaceAuthRule 'Microsoft.ServiceBus/namespaces/authorizationRules@2024-01-01' = {
-  parent: serviceBusNamespace
+resource sbAuthRule 'Microsoft.ServiceBus/namespaces/authorizationRules@2022-10-01-preview' existing = {
   name: 'RootManageSharedAccessKey'
-  properties: {
-    rights: [
-      'Listen'
-      'Send'
-      'Manage'
-    ]
-  }
+  parent: serviceBusNamespace
 }
 
-resource sbNamespaceAuthRuleKeys 'Microsoft.ServiceBus/namespaces/authorizationRules/listKeys@2024-01-01' = {
-  parent: sbNamespaceAuthRule
-  name: 'listKeys'
-}
 
-output serviceBusConnectionString string = sbNamespaceAuthRuleKeys.properties.primaryConnectionString
+
 output serviceBusNamespaceId string = serviceBusNamespace.id
+var sbKeys = listKeys(sbAuthRule.id, sbAuthRule.apiVersion)
+output serviceBusConnectionString string = sbKeys.primaryConnectionString

@@ -148,7 +148,7 @@ module containerApps 'modules/aca.Bicep' = {
     cosmosAccountName: cosmosAccountName
     serviceBusConnectionString: serviceBus.outputs.serviceBusConnectionString
     eventHubConnectionString: eventHub.outputs.eventHubConnectionString
-    redisConnectionString: redisCache.outputs.primaryConnectionString
+    redisConnectionString: redisCache.outputs.redisConnectionString
   }
 }
 

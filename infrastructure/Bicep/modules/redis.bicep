@@ -15,7 +15,8 @@ resource redis 'Microsoft.Cache/Redis@2023-04-01' = {
   }
 }
 
-var redisKeys = listKeys(redis.id, redis.apiVersion)
 
-output primaryConnectionString string = '${redis.name}.redis.cache.windows.net:6380,password=${redisKeys.primaryKey},ssl=True,abortConnect=False'
+var redisHost = redis.properties.hostName
+var redisKey = listKeys(redis.id, redis.apiVersion).primaryKey
+output redisConnectionString string  = '${redisHost},password=${redisKey},ssl=True,abortConnect=False'
 output redisId string = redis.id
