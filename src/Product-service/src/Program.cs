@@ -19,6 +19,10 @@ string cosmosUri;
 string cosmosDbNameProduct;
 string cosmosDbNameCategory;
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8080); 
+});
 
 if (builder.Environment.IsDevelopment())
 {
