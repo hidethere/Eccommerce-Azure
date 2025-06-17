@@ -13,6 +13,10 @@ param cosmosConnectionString string
 param cosmosAccountName string
 param cosmosAccountId string
 param keyVaultId string
+param serviceBusConnectionString string
+param eventHubConnectionString string
+param redisConnectionString string
+
 
 resource acaEnv 'Microsoft.App/managedEnvironments@2023-05-01' existing = {
   name: environmentName
@@ -43,6 +47,13 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
       ingress: {
         external: true
         targetPort: 8080
+      }
+      dapr:{
+        enabled: true
+        appPort: 8080
+        appId: containerAppName
+        appProtocol: 'http'
+        
       }
       registries: [
         {
@@ -77,10 +88,31 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
               name: 'COSMOS_PRODUCTDB_NAME' 
               value: 'productdb'
             }
+ 
+            {
+              name: 'COSMOS_INVENTORYDB_NAME'
+              value: 'inventorydb'
+            } 
             {
               name: 'COSMOS_CATEGORYDB_NAME'
               value: 'categorydb'
             } 
+            {
+              name: 'COSMOS_ORDERDB_NAME'
+              value: 'orderdb'
+            } 
+            {
+              name: 'SERVICEBUS_CONNECTION'
+              value: serviceBusConnectionString
+            }
+            {
+              name: 'EVENTHUB_CONNECTION'
+              value: eventHubConnectionString
+            }
+            {
+              name: 'REDIS_CONNECTION'
+              value: redisConnectionString
+            }
   
           ]
         }

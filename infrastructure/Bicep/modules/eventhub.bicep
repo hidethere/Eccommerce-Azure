@@ -27,5 +27,17 @@ resource schemaRegistry 'Microsoft.EventHub/namespaces/schemas@2022-10-01-previe
   properties: {}
 }
 
+
+
 output schemaRegistryId string = schemaRegistry.id */
+
+// Get default authorization rule (RootManageSharedAccessKey)
+resource authRule 'Microsoft.EventHub/namespaces/authorizationRules@2022-10-01-preview' existing = {
+  name: '${eventHubNamespace.name}/RootManageSharedAccessKey'
+}
+
+// Use listKeys to get connection strings from the auth rule
+var keys = listKeys(authRule.id, authRule.apiVersion)
+
+output eventHubConnectionString string = keys.primaryConnectionString
 output eventHubNamespaceId string = eventHubNamespace.id
