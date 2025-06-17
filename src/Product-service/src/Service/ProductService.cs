@@ -29,7 +29,7 @@ namespace Product_service.Service
         public async Task<ProductDto> CreateProductAsync(ProductDto productdto)
         {
             Product productFound = await _productRepository.FindProductByNameAsync(productdto.Name);
-            Category categoryFound = await _categoryRepository.FindCategoryByNameAsync(productdto.Category.Name);
+            Category categoryFound = await _categoryRepository.FindCategoryByIdAsync(productdto.CategoryId);
 
             if(productFound != null)
             {
@@ -40,10 +40,9 @@ namespace Product_service.Service
             {
                 throw new CategoryNotFoundException("Category Doesnt exists!", HttpStatusCode.NotFound);
             }
-            productdto.Category.Name = categoryFound.Name;
+            productdto.CategoryId = categoryFound.Id;
 
             Product product = _productMapper.DtoToEntity(productdto);
-            product.CategoryId = categoryFound.Id;
 
             if(productdto.Image != null && productdto.Image.Length > 0)
             {
@@ -75,7 +74,8 @@ namespace Product_service.Service
                 productQuery = productQuery.Take(limit.Value);
             }
 
-            var products = await productQuery.Include(p => p.Category).Select(p => _productMapper.EntityToDto(p)).ToListAsync();
+
+            var products = await productQuery.Select(p => _productMapper.EntityToDto(p)).ToListAsync();
 
             return products;
         }

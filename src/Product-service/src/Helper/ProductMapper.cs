@@ -12,6 +12,7 @@ namespace Product_service.Helper
                 Name = productDto.Name,
                 Description = productDto.Description,
                 Price = productDto.Price,
+                CategoryId = productDto.CategoryId
             };
         }
 
@@ -22,6 +23,7 @@ namespace Product_service.Helper
                 Name = product.Name,
                 Description = product.Description,
                 Price = product.Price,
+                CategoryId = product.CategoryId
             };
         }
     }

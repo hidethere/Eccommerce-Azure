@@ -12,15 +12,13 @@ namespace Product_service.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultContainer("ProductContainer");
+            modelBuilder.HasDefaultContainer("Categories");
 
             
             modelBuilder.Entity<Category>().ToContainer("Categories");
             modelBuilder.Entity<Category>().HasPartitionKey(c => c.Id);
             modelBuilder.Entity<Category>().Property(c => c.Id).ToJsonProperty("id");
             modelBuilder.Entity<Category>().HasKey(c => c.Id);
-            base.OnModelCreating(modelBuilder);
-
             base.OnModelCreating(modelBuilder);
 
         }

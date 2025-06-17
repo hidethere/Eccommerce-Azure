@@ -9,6 +9,6 @@ namespace Product_service.Dto
         public string Description { get; set; }
         public int Price { get; set; }
         public IFormFile? Image { get; set; }
-        public CategoryDto Category { get; set; }
+        public string CategoryId { get; set; }
     }
 }

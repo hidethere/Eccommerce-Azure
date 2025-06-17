@@ -23,9 +23,13 @@ namespace Product_service.Repository
             return await _dbContext.Categories.ToListAsync();
         }
 
-        public async Task<Category> FindCategoryByNameAsync(string Name)
+        public async Task<Category> FindCategoryByIdAsync(string categoryId)
         {
-            return await _dbContext.Categories.FirstOrDefaultAsync(c => c.Name.Equals(Name));
+            return await _dbContext.Categories.FindAsync(categoryId);
+        }
+        public async Task<Category> FindCategoryByNameAsync(string name)
+        {
+            return await _dbContext.Categories.FirstOrDefaultAsync(p => p.Name == name);
         }
     }
 }

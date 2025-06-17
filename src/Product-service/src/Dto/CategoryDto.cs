@@ -1,7 +1,4 @@
-﻿using Product_service.Domain;
-using System.ComponentModel.DataAnnotations;
-
-namespace Product_service.Dto
+﻿namespace Product_service.Dto
 {
     public record CategoryDto
     {
