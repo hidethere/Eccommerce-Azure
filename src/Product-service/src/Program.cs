@@ -23,7 +23,7 @@ string cosmosDbNameCategory;
 if (builder.Environment.IsDevelopment())
 {
     Console.WriteLine("Running in Development Environment");
-    cosmosUri = config["CosmosDb:UriLocal"]!;
+    cosmosUri = config["CosmosDb:Uri"]!;
     cosmosDbNameProduct = config["CosmosDb:ProductDbName"]!;
     cosmosDbNameCategory = config["CosmosDb:CategoryDbName"]!;
 }
@@ -84,6 +84,19 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod(); // Allows POST, PUT, DELETE
+    });
+});
+
+app.UseCors();
 
 app.UseAuthorization();
 
